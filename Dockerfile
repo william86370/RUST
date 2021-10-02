@@ -9,15 +9,16 @@ ENV STEAMAPPID 258550
 ENV STEAMAPP rust
 ENV STEAMAPPDIR "${HOMEDIR}/${STEAMAPP}-dedicated"
 ENV DLURL https://raw.githubusercontent.com/william86370/RUST
+ENV VERSION=1.0.1
 
 # Add entry script & RUST config
 # Remove packages and tidy up
 RUN set -x \
 	&& apt-get update \
 	&& apt-get install -y --no-install-recommends --no-install-suggests \
-		wget=1.20.1-1.1 \
+		wget \
 		ca-certificates \
-		lib32z1=1:1.2.11.dfsg-1 \
+		lib32z1 \
 	&& mkdir -p "${STEAMAPPDIR}" \
 	&& wget --max-redirect=30 "${DLURL}/master/etc/entry.sh" -O "${HOMEDIR}/entry.sh" \
 	&& { \

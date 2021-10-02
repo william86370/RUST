@@ -9,7 +9,7 @@ bash "${STEAMCMDDIR}/steamcmd.sh" +login anonymous \
 # Believe it or not, if you don't do this rust shits itself
 cd "${STEAMAPPDIR}"
 #Assume all enviroment vars are being passed into the container
-bash "./RustDedicated" -batchmode  +app.listenip ${APP_LISENIP} \
+./RustDedicated -batchmode  +app.listenip ${APP_LISENIP} \
                                                 +app.port ${APP_PORT} \
                                                 +server.ip ${SERVER_IP} \
                                                 +server.port ${SERVER_PORT} \
