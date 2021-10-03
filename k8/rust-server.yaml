@@ -36,35 +36,37 @@ spec:
         app: prod-rust-server
     spec:
       containers:
-      - image: docker.lootbot.live/rust:1.0.2
+      - image: docker.lootbot.live/rust:1.0.3
         name: prod-rust-server
         env:
         - name: SERVER_PORT
-          value: 28015
+          value: "28015"
         - name: SERVER_HOSTNAME
           value: "rust-server"
         - name: SERVER_SEED
-          value: 0
+          value: "0"
         - name: SERVER_SALT
-          value: 0
+          value: "0"
         - name: SERVER_MAXPLAYERS
-          value: 50
+          value: "50"
         - name: SERVER_WORLDSIZE
-          value: 3000
+          value: "3000"
         - name: SERVER_SAVEINTERVAL
           value: "rust-server"
         - name: RCON_PORT
-          value: 28016
+          value: "28016"
         - name: RCON_PASSWORD
           value: "change-me"
         ports:
-        - containerPort: 28015
-          name: server
-        - containerPort: 28016
-          name: rcon
+          - name: server
+            containerPort: 28015
+            protocol: TCP
+          - name: rcon
+            containerPort: 28016
+            protocol: TCP
         volumeMounts:
         - name: rust-data
-          mountPath: /home/steam/rust-dedicated
+          mountPath: /rust-dedicated
       volumes:
       - name: rust-data
         persistentVolumeClaim:
@@ -80,9 +82,11 @@ spec:
   type: NodePort
   ports:
   - port: 28015
-    nodePort: 28015
+    nodePort: 30001
+    name: server
   - port: 28016
-    nodePort: 28016
+    nodePort: 30002
+    name: rcon
   selector:
     app: prod-rust-server
 ---

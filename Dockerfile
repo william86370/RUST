@@ -7,9 +7,9 @@ LABEL maintainer="william86370@gmail.com"
 
 ENV STEAMAPPID 258550
 ENV STEAMAPP rust
-ENV STEAMAPPDIR "${HOMEDIR}/${STEAMAPP}-dedicated"
+ENV STEAMAPPDIR "/${STEAMAPP}-dedicated"
 ENV DLURL https://raw.githubusercontent.com/william86370/RUST
-ENV VERSION=1.0.2
+ENV VERSION=1.0.3
 
 # Add entry script & RUST config
 # Remove packages and tidy up
