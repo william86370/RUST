@@ -9,7 +9,7 @@ ENV STEAMAPPID 258550
 ENV STEAMAPP rust
 ENV STEAMAPPDIR "${HOMEDIR}/${STEAMAPP}-dedicated"
 ENV DLURL https://raw.githubusercontent.com/william86370/RUST
-ENV VERSION=1.0.1
+ENV VERSION=1.0.2
 
 # Add entry script & RUST config
 # Remove packages and tidy up
@@ -19,6 +19,8 @@ RUN set -x \
 		wget \
 		ca-certificates \
 		lib32z1 \
+		libgdiplus \
+		mono-devel \
 	&& mkdir -p "${STEAMAPPDIR}" \
 	&& wget --max-redirect=30 "${DLURL}/master/etc/entry.sh" -O "${HOMEDIR}/entry.sh" \
 	&& { \
@@ -52,11 +54,8 @@ RCON_IP=0.0.0.0  \
 RCON_PORT=28016  \
 RCON_PASSWORD="CHANGE_ME" 
 
-
 USER ${USER}
-
-VOLUME ${STEAMAPPDIR}
 
 WORKDIR ${HOMEDIR}
 
-CMD ["bash", "entry.sh"]
+CMD ["/bin/bash","entry.sh"]

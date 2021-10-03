@@ -1,0 +1,88 @@
+#Yaml for deploying the rust server to a k8 cluster
+
+# Creates the namespace rust-server
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: rust-server
+---
+#Create the PVC for rust-data
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: rust-data
+  namespace: rust-server
+spec:
+  accessModes:
+  - ReadWriteOnce
+  storageClassName: longhorn
+  resources:
+    requests:
+      storage: 40Gi
+--- 
+#Create the deployment for rust
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prod-rust-server
+  namespace: rust-server
+spec:
+  selector:
+    matchLabels:
+      app: prod-rust-server
+  template:
+    metadata:
+      labels:
+        app: prod-rust-server
+    spec:
+      containers:
+      - image: docker.lootbot.live/rust:1.0.2
+        name: prod-rust-server
+        env:
+        - name: SERVER_PORT
+          value: 28015
+        - name: SERVER_HOSTNAME
+          value: "rust-server"
+        - name: SERVER_SEED
+          value: 0
+        - name: SERVER_SALT
+          value: 0
+        - name: SERVER_MAXPLAYERS
+          value: 50
+        - name: SERVER_WORLDSIZE
+          value: 3000
+        - name: SERVER_SAVEINTERVAL
+          value: "rust-server"
+        - name: RCON_PORT
+          value: 28016
+        - name: RCON_PASSWORD
+          value: "change-me"
+        ports:
+        - containerPort: 28015
+          name: server
+        - containerPort: 28016
+          name: rcon
+        volumeMounts:
+        - name: rust-data
+          mountPath: /home/steam/rust-dedicated
+      volumes:
+      - name: rust-data
+        persistentVolumeClaim:
+          claimName: rust-data
+          readOnly: false
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: prod-rust-server
+  namespace: rust-server
+spec:
+  type: NodePort
+  ports:
+  - port: 28015
+    nodePort: 28015
+  - port: 28016
+    nodePort: 28016
+  selector:
+    app: prod-rust-server
+---
